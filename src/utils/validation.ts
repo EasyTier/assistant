@@ -1,6 +1,8 @@
 import type { TFunction } from 'i18next';
 import type { EasyTierConfig } from '../types/config';
 
+const U64_MAX = 18446744073709551615n;
+
 export interface FieldValidationError {
   key: string;
   values?: Record<string, string>;
@@ -48,6 +50,12 @@ function parsePort(value: string): number | undefined {
 
 function isIpv6Address(value: string): boolean {
   return value.includes(':') && /^[0-9a-fA-F:.]+$/.test(value);
+}
+
+function validateU64Flag(value: unknown): FieldValidationError | undefined {
+  if (typeof value === 'bigint') return value >= 0n && value <= U64_MAX ? undefined : fieldError('invalidU64');
+  if (typeof value === 'number') return Number.isInteger(value) && value >= 0 ? undefined : fieldError('invalidU64');
+  return fieldError('invalidU64');
 }
 
 export function normalizeIpv4Cidr(value: string): string | undefined {
@@ -181,6 +189,14 @@ export function validateConfig(config: EasyTierConfig): ValidationIssue[] {
       'vpn_portal_config.wireguard_listen',
       validateRequired(config.vpn_portal.wireguard_listen) ?? validateSocketAddr(config.vpn_portal.wireguard_listen),
     );
+  }
+
+  const flags = config.flags ?? {};
+  if (flags.foreign_relay_bps_limit !== undefined) {
+    add('flags.foreign_relay_bps_limit', validateU64Flag(flags.foreign_relay_bps_limit));
+  }
+  if (flags.instance_recv_bps_limit !== undefined) {
+    add('flags.instance_recv_bps_limit', validateU64Flag(flags.instance_recv_bps_limit));
   }
 
   config.port_forwards?.forEach((forward, index) => {

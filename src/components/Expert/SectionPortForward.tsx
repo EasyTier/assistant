@@ -3,6 +3,7 @@ import { useConfig } from '../../context/useConfig';
 import { FormField } from '../common/FormField';
 import { Plus, Trash2 } from 'lucide-react';
 import type { PortForwardConfig } from '../../types/config';
+import { formatValidationError, validateRequired, validateSocketAddr } from '../../utils/validation';
 
 export function SectionPortForward() {
   const { t } = useTranslation();
@@ -36,7 +37,11 @@ export function SectionPortForward() {
             key={i}
             className="grid grid-cols-1 md:grid-cols-[1fr_1fr_auto_auto] gap-2 items-end p-4 rounded-xl bg-[var(--color-surface)] dark:bg-[var(--color-surface-dark)] border border-[var(--color-border)] dark:border-[var(--color-border-dark)]"
           >
-            <FormField label={t('localBind')} htmlFor={`fw-bind-${i}`}>
+            <FormField
+              label={t('localBind')}
+              htmlFor={`fw-bind-${i}`}
+              error={formatValidationError(validateRequired(fw.bind_addr) ?? validateSocketAddr(fw.bind_addr), t)}
+            >
               <input
                 id={`fw-bind-${i}`}
                 type="text"
@@ -46,7 +51,11 @@ export function SectionPortForward() {
                 className="w-full px-4 py-2.5 rounded-xl bg-white dark:bg-[#27272a] text-sm text-[var(--color-text-h)] dark:text-[var(--color-text-h-dark)] border border-[var(--color-border)] dark:border-[#3f3f46] focus:outline-none focus:ring-1 focus:ring-[var(--color-border)] dark:focus:ring-[var(--color-border-dark)]"
               />
             </FormField>
-            <FormField label={t('dstAddress')} htmlFor={`fw-dst-${i}`}>
+            <FormField
+              label={t('dstAddress')}
+              htmlFor={`fw-dst-${i}`}
+              error={formatValidationError(validateRequired(fw.dst_addr) ?? validateSocketAddr(fw.dst_addr), t)}
+            >
               <input
                 id={`fw-dst-${i}`}
                 type="text"

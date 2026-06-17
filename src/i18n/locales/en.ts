@@ -126,6 +126,16 @@ export const en = {
   copy: 'Copy',
   download: 'Download',
 
+  // Validation
+  requiredField: 'This field is required.',
+  invalidIpv4Cidr: 'Enter a valid IPv4 CIDR, e.g. 192.168.1.0/24.',
+  cidrHostBitsMustBeZero: 'CIDR host bits must be zero. Did you mean {{suggestion}}?',
+  invalidIpv4Address: 'Enter a valid IPv4 address, optionally with a prefix length.',
+  invalidIpAddress: 'Enter a valid IP address.',
+  invalidSocketAddr: 'Enter a valid socket address, e.g. 0.0.0.0:11010.',
+  invalidUrl: 'Enter a valid URL, e.g. tcp://host:11010.',
+  fixValidationErrorsBeforeDownload: 'Fix validation errors before copying or downloading the config.',
+
   // Wizard Controls
   prevStep: 'Previous',
   nextStep: 'Next',

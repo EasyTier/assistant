@@ -126,6 +126,16 @@ export const zh = {
   copy: '复制',
   download: '下载',
 
+  // Validation
+  requiredField: '此字段必填。',
+  invalidIpv4Cidr: '请输入有效的 IPv4 CIDR，例如 192.168.1.0/24。',
+  cidrHostBitsMustBeZero: 'CIDR 主机位必须为 0。你是不是想填 {{suggestion}}？',
+  invalidIpv4Address: '请输入有效的 IPv4 地址，可选带前缀长度。',
+  invalidIpAddress: '请输入有效的 IP 地址。',
+  invalidSocketAddr: '请输入有效的监听地址，例如 0.0.0.0:11010。',
+  invalidUrl: '请输入有效的 URL，例如 tcp://host:11010。',
+  fixValidationErrorsBeforeDownload: '请先修复校验错误，再复制或下载配置。',
+
   // Wizard Controls
   prevStep: '上一步',
   nextStep: '下一步',

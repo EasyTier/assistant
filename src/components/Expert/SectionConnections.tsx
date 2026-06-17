@@ -3,10 +3,12 @@ import { useConfig } from '../../context/useConfig';
 import { FormField } from '../common/FormField';
 import { Select } from '../common/Select';
 import { RepeatableField } from '../common/RepeatableField';
+import { formatValidationError, validateUrl } from '../../utils/validation';
 
 export function SectionConnections() {
   const { t } = useTranslation();
   const { config, updateConfig } = useConfig();
+  const validateUrlField = (value: string) => formatValidationError(validateUrl(value), t);
 
   const methodOptions = [
     { value: 'manual', label: t('manualConfig') },
@@ -40,6 +42,7 @@ export function SectionConnections() {
                 }
                 placeholder="tcp://host:11010"
                 addLabel={t('addPeer')}
+                validate={validateUrlField}
               />
             </FormField>
 
@@ -49,6 +52,7 @@ export function SectionConnections() {
                 onChange={(v) => updateConfig({ listeners: v })}
                 placeholder="tcp://0.0.0.0:11010"
                 addLabel={t('addListener')}
+                validate={validateUrlField}
               />
             </FormField>
 
@@ -58,6 +62,7 @@ export function SectionConnections() {
                 onChange={(v) => updateConfig({ mapped_listeners: v })}
                 placeholder="tcp://public-ip:11010"
                 addLabel={t('addMappedListener')}
+                validate={validateUrlField}
               />
             </FormField>
           </>

@@ -5,10 +5,11 @@ interface FormFieldProps {
   htmlFor?: string;
   children: ReactNode;
   description?: string;
+  error?: string;
   required?: boolean;
 }
 
-export function FormField({ label, htmlFor, children, description, required }: FormFieldProps) {
+export function FormField({ label, htmlFor, children, description, error, required }: FormFieldProps) {
   return (
     <div className="flex flex-col gap-1.5">
       <label htmlFor={htmlFor} className="text-sm font-medium text-[var(--color-text-h)] dark:text-[var(--color-text-h-dark)]">
@@ -21,6 +22,7 @@ export function FormField({ label, htmlFor, children, description, required }: F
           {description}
         </p>
       )}
+      {error && <p className="text-xs text-red-600 dark:text-red-400">{error}</p>}
     </div>
   );
 }

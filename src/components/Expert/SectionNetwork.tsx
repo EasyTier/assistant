@@ -4,12 +4,14 @@ import { Shuffle, Eye, EyeOff } from 'lucide-react';
 import { useConfig } from '../../context/useConfig';
 import { FormField } from '../common/FormField';
 import { randomNetworkName, randomSecret } from '../../utils/random';
+import { formatValidationError, validateRequired } from '../../utils/validation';
 
 export function SectionNetwork() {
   const { t } = useTranslation();
   const { config, updateConfig } = useConfig();
   const ni = config.network_identity ?? { network_name: '' };
   const [showSecret, setShowSecret] = useState(false);
+  const networkNameError = formatValidationError(validateRequired(ni.network_name), t);
 
   return (
     <section id="network" className="scroll-mt-14">
@@ -17,7 +19,7 @@ export function SectionNetwork() {
         {t('networkIdentity')}
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <FormField label={t('networkName')} htmlFor="net-name" required>
+        <FormField label={t('networkName')} htmlFor="net-name" error={networkNameError} required>
           <div className="flex gap-2">
             <input
               id="net-name"

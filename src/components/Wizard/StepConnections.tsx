@@ -3,10 +3,12 @@ import { useConfig } from '../../context/useConfig';
 import { FormField } from '../common/FormField';
 import { Select } from '../common/Select';
 import { RepeatableField } from '../common/RepeatableField';
+import { formatValidationError, validateUrl } from '../../utils/validation';
 
 export function StepConnections() {
   const { t } = useTranslation();
   const { config, updateConfig } = useConfig();
+  const validateUrlField = (value: string) => formatValidationError(validateUrl(value), t);
 
   const methodOptions = [
     { value: 'manual', label: t('manualConfigPeers') },
@@ -44,6 +46,7 @@ export function StepConnections() {
               }
               placeholder="tcp://host:11010"
               addLabel={t('addPeer')}
+              validate={validateUrlField}
             />
           </FormField>
           <FormField label={t('listeners')} description={t('localListenAddr')}>
@@ -52,6 +55,7 @@ export function StepConnections() {
               onChange={(v) => updateConfig({ listeners: v })}
               placeholder="tcp://0.0.0.0:11010"
               addLabel={t('addListener')}
+              validate={validateUrlField}
             />
           </FormField>
         </>

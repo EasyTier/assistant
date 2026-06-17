@@ -18,47 +18,6 @@ function isEqual(a: unknown, b: unknown): boolean {
   return false;
 }
 
-function parseIpv4Address(value: string): number | undefined {
-  const parts = value.split('.');
-  if (parts.length !== 4) return undefined;
-
-  let address = 0;
-  for (const part of parts) {
-    if (!/^\d+$/.test(part)) return undefined;
-    const octet = Number(part);
-    if (!Number.isInteger(octet) || octet < 0 || octet > 255) return undefined;
-    address = address * 256 + octet;
-  }
-
-  return address;
-}
-
-function formatIpv4Address(value: number): string {
-  return [
-    Math.floor(value / 256 ** 3) % 256,
-    Math.floor(value / 256 ** 2) % 256,
-    Math.floor(value / 256) % 256,
-    value % 256,
-  ].join('.');
-}
-
-function normalizeIpv4Cidr(value: string): string {
-  const [rawAddress, rawPrefix, extra] = value.trim().split('/');
-  if (extra !== undefined || rawPrefix === undefined) return value;
-
-  const address = parseIpv4Address(rawAddress);
-  const prefix = Number(rawPrefix);
-  if (address === undefined || !Number.isInteger(prefix) || prefix < 0 || prefix > 32) return value;
-
-  const blockSize = 2 ** (32 - prefix);
-  const network = Math.floor(address / blockSize) * blockSize;
-  return `${formatIpv4Address(network)}/${prefix}`;
-}
-
-function normalizeCidrList(values: string[] | undefined): string[] | undefined {
-  return values?.map(normalizeIpv4Cidr);
-}
-
 export function generateToml(config: EasyTierConfig): string {
   const obj: Record<string, unknown> = Object.create(null);
 
@@ -114,24 +73,17 @@ export function generateToml(config: EasyTierConfig): string {
 
   // Routes
   if (config.routes && config.routes.length > 0 && !isEqual(config.routes, easytierDefaults.routes)) {
-    obj.routes = normalizeCidrList(config.routes);
+    obj.routes = config.routes;
   }
 
   // Proxy networks
   if (config.proxy_networks && config.proxy_networks.length > 0 && !isEqual(config.proxy_networks, easytierDefaults.proxy_networks)) {
-    obj.proxy_network = config.proxy_networks.map((proxyNetwork) => ({
-      ...proxyNetwork,
-      cidr: normalizeIpv4Cidr(proxyNetwork.cidr),
-      ...(proxyNetwork.mapped_cidr && { mapped_cidr: normalizeIpv4Cidr(proxyNetwork.mapped_cidr) }),
-    }));
+    obj.proxy_network = config.proxy_networks;
   }
 
   // VPN portal
   if (config.vpn_portal && !isEqual(config.vpn_portal, easytierDefaults.vpn_portal)) {
-    obj.vpn_portal_config = {
-      ...config.vpn_portal,
-      client_cidr: normalizeIpv4Cidr(config.vpn_portal.client_cidr),
-    };
+    obj.vpn_portal_config = config.vpn_portal;
   }
 
   // Port forwards

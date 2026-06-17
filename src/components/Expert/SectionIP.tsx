@@ -2,10 +2,16 @@ import { useTranslation } from 'react-i18next';
 import { useConfig } from '../../context/useConfig';
 import { FormField } from '../common/FormField';
 import { Toggle } from '../common/Toggle';
+import { formatValidationError, validateIpv4Inet, validateRequired } from '../../utils/validation';
 
 export function SectionIP() {
   const { t } = useTranslation();
   const { config, updateConfig } = useConfig();
+  const ipv4 = config.ipv4 ?? '';
+  const ipv4Error = formatValidationError(
+    config.dhcp === false ? validateRequired(ipv4) ?? validateIpv4Inet(ipv4) : validateIpv4Inet(ipv4),
+    t,
+  );
 
   return (
     <section id="ip" className="scroll-mt-14">
@@ -22,7 +28,7 @@ export function SectionIP() {
           />
         </div>
 
-        <FormField label={t('ipv4Address')} htmlFor="ipv4" description={t('requiredWhenDhcpOff')}>
+        <FormField label={t('ipv4Address')} htmlFor="ipv4" description={t('requiredWhenDhcpOff')} error={ipv4Error}>
           <input
             id="ipv4"
             type="text"

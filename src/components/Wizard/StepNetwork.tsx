@@ -4,19 +4,21 @@ import { Shuffle, Eye, EyeOff } from 'lucide-react';
 import { useConfig } from '../../context/useConfig';
 import { FormField } from '../common/FormField';
 import { randomNetworkName, randomSecret } from '../../utils/random';
+import { formatValidationError, validateRequired } from '../../utils/validation';
 
 export function StepNetwork() {
   const { t } = useTranslation();
   const { config, updateConfig } = useConfig();
   const ni = config.network_identity ?? { network_name: '' };
   const [showSecret, setShowSecret] = useState(false);
+  const networkNameError = formatValidationError(validateRequired(ni.network_name), t);
 
   return (
     <div className="space-y-4">
       <p className="text-sm text-[var(--color-text)] dark:text-[var(--color-text-dark)]">
         {t('networkIdentityDesc')}
       </p>
-      <FormField label={t('networkName')} htmlFor="wz-net-name" required>
+      <FormField label={t('networkName')} htmlFor="wz-net-name" error={networkNameError} required>
         <div className="flex gap-2">
           <input
             id="wz-net-name"

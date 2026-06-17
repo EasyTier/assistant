@@ -7,9 +7,10 @@ interface WizardControlsProps {
   onPrev: () => void;
   onNext: () => void;
   onDownload: () => void;
+  disableDownload?: boolean;
 }
 
-export function WizardControls({ currentStep, totalSteps, onPrev, onNext, onDownload }: WizardControlsProps) {
+export function WizardControls({ currentStep, totalSteps, onPrev, onNext, onDownload, disableDownload }: WizardControlsProps) {
   const { t } = useTranslation();
   const isFirst = currentStep === 0;
   const isLast = currentStep === totalSteps - 1;
@@ -34,7 +35,8 @@ export function WizardControls({ currentStep, totalSteps, onPrev, onNext, onDown
         <button
           type="button"
           onClick={onDownload}
-          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-medium text-white dark:text-black bg-[var(--color-text-h)] dark:bg-[var(--color-text-h-dark)] hover:opacity-90 transition-opacity"
+          disabled={disableDownload}
+          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-medium text-white dark:text-black bg-[var(--color-text-h)] dark:bg-[var(--color-text-h-dark)] hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
         >
           <FileDown size={16} />
           <span className="hidden sm:inline">{t('download')}</span>

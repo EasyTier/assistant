@@ -2,10 +2,13 @@ import { useTranslation } from 'react-i18next';
 import { useConfig } from '../../context/useConfig';
 import { FormField } from '../common/FormField';
 import { RepeatableField } from '../common/RepeatableField';
+import { formatValidationError, validateIpAddr, validateIpv4CidrStrict } from '../../utils/validation';
 
 export function SectionProxyRoutes() {
   const { t } = useTranslation();
   const { config, updateConfig } = useConfig();
+  const error = (validator: (value: string) => ReturnType<typeof validateIpv4CidrStrict>) =>
+    (value: string) => formatValidationError(validator(value), t);
 
   return (
     <section id="proxy" className="scroll-mt-14">
@@ -23,6 +26,7 @@ export function SectionProxyRoutes() {
             }
             placeholder="192.168.1.0/24"
             addLabel={t('addNetwork')}
+            validate={error(validateIpv4CidrStrict)}
           />
         </FormField>
 
@@ -32,6 +36,7 @@ export function SectionProxyRoutes() {
             onChange={(v) => updateConfig({ routes: v })}
             placeholder="10.0.0.0/8"
             addLabel={t('addRoute')}
+            validate={error(validateIpv4CidrStrict)}
           />
         </FormField>
 
@@ -41,6 +46,7 @@ export function SectionProxyRoutes() {
             onChange={(v) => updateConfig({ exit_nodes: v })}
             placeholder="10.144.144.1"
             addLabel={t('addExitNode')}
+            validate={error(validateIpAddr)}
           />
         </FormField>
       </div>

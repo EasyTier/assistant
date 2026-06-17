@@ -2,10 +2,13 @@ import { useTranslation } from 'react-i18next';
 import { useConfig } from '../../context/useConfig';
 import { FormField } from '../common/FormField';
 import { Toggle } from '../common/Toggle';
+import { formatValidationError, validateIpv4Inet, validateRequired } from '../../utils/validation';
 
 export function StepIP() {
   const { t } = useTranslation();
   const { config, updateConfig } = useConfig();
+  const ipv4 = config.ipv4 ?? '';
+  const ipv4Error = formatValidationError(validateRequired(ipv4) ?? validateIpv4Inet(ipv4), t);
 
   return (
     <div className="space-y-4">
@@ -19,7 +22,7 @@ export function StepIP() {
         label={t('enableDhcp')}
       />
       {!config.dhcp && (
-        <FormField label={t('staticIpv4')} htmlFor="wz-ipv4" required>
+        <FormField label={t('staticIpv4')} htmlFor="wz-ipv4" error={ipv4Error} required>
           <input
             id="wz-ipv4"
             type="text"

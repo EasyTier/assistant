@@ -11,6 +11,7 @@ import { StepAdvanced } from './StepAdvanced';
 
 import { downloadToml } from '../../utils/toml';
 import { StepReview } from './StepReview';
+import { validateConfig } from '../../utils/validation';
 
 const stepComponents = [
   StepNetwork,
@@ -44,10 +45,12 @@ export function Wizard() {
   };
 
   const goDownload = () => {
+    if (validateConfig(config).length > 0) return;
     downloadToml(config);
   };
 
   const StepComponent = stepComponents[currentStep];
+  const hasValidationErrors = validateConfig(config).length > 0;
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
@@ -60,6 +63,7 @@ export function Wizard() {
           onPrev={goPrev}
           onNext={goNext}
           onDownload={goDownload}
+          disableDownload={hasValidationErrors}
         />
       </div>
     </div>

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { FileDown, Copy, Check, ChevronUp, ChevronDown } from 'lucide-react';
 import { useConfig } from '../context/useConfig';
 import { generateToml, downloadToml } from '../utils/toml';
+import { formatValidationIssue, validateConfig } from '../utils/validation';
 
 export function TomlPreview() {
   const { t } = useTranslation();
@@ -11,8 +12,11 @@ export function TomlPreview() {
   const [collapsed, setCollapsed] = useState(true);
 
   const toml = generateToml(config);
+  const validationIssues = validateConfig(config);
+  const hasValidationErrors = validationIssues.length > 0;
 
   const handleCopy = async () => {
+    if (hasValidationErrors) return;
     await navigator.clipboard.writeText(toml);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -33,6 +37,16 @@ export function TomlPreview() {
         {!collapsed && (
           <>
             <div className="border-t border-[var(--color-border)] dark:border-[var(--color-border-dark)]">
+              {hasValidationErrors && (
+                <div className="border-b border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-950/30 px-4 py-3 text-xs text-red-700 dark:text-red-300">
+                  <p className="font-medium">{t('fixValidationErrorsBeforeDownload')}</p>
+                  <ul className="mt-2 space-y-1">
+                    {validationIssues.map((issue) => (
+                      <li key={`${issue.field}:${issue.error.key}`}>{formatValidationIssue(issue, t)}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
               <pre className="max-h-60 sm:max-h-80 overflow-auto p-4 text-xs font-mono text-[var(--color-text-h)] dark:text-[var(--color-text-h-dark)] bg-[var(--color-code-bg)] dark:bg-[var(--color-code-bg-dark)]">
                 {toml || t('noConfig')}
               </pre>
@@ -41,15 +55,19 @@ export function TomlPreview() {
               <button
                 type="button"
                 onClick={handleCopy}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium text-[var(--color-text-h)] dark:text-[var(--color-text-h-dark)] bg-white dark:bg-transparent border border-[var(--color-border)] dark:border-[var(--color-border-dark)] hover:bg-[var(--color-accent-bg)] dark:hover:bg-[var(--color-accent-bg-dark)] transition-colors"
+                disabled={hasValidationErrors}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium text-[var(--color-text-h)] dark:text-[var(--color-text-h-dark)] bg-white dark:bg-transparent border border-[var(--color-border)] dark:border-[var(--color-border-dark)] hover:bg-[var(--color-accent-bg)] dark:hover:bg-[var(--color-accent-bg-dark)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 {copied ? <Check size={14} /> : <Copy size={14} />}
                 {copied ? t('copied') : t('copy')}
               </button>
               <button
                 type="button"
-                onClick={() => downloadToml(config)}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium text-white dark:text-black bg-[var(--color-text-h)] dark:bg-[var(--color-text-h-dark)] hover:opacity-90 transition-opacity"
+                onClick={() => {
+                  if (!hasValidationErrors) downloadToml(config);
+                }}
+                disabled={hasValidationErrors}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium text-white dark:text-black bg-[var(--color-text-h)] dark:bg-[var(--color-text-h-dark)] hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
               >
                 <FileDown size={14} />
                 {t('download')}

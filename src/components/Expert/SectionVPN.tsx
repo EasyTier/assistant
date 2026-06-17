@@ -2,11 +2,29 @@ import { useTranslation } from 'react-i18next';
 import { useConfig } from '../../context/useConfig';
 import { FormField } from '../common/FormField';
 import { Toggle } from '../common/Toggle';
+import {
+  formatValidationError,
+  validateIpv4CidrStrict,
+  validateRequired,
+  validateSocketAddr,
+} from '../../utils/validation';
 
 export function SectionVPN() {
   const { t } = useTranslation();
   const { config, updateConfig } = useConfig();
   const enabled = !!config.vpn_portal;
+  const clientCidrError = formatValidationError(
+    config.vpn_portal
+      ? validateRequired(config.vpn_portal.client_cidr) ?? validateIpv4CidrStrict(config.vpn_portal.client_cidr)
+      : undefined,
+    t,
+  );
+  const listenError = formatValidationError(
+    config.vpn_portal
+      ? validateRequired(config.vpn_portal.wireguard_listen) ?? validateSocketAddr(config.vpn_portal.wireguard_listen)
+      : undefined,
+    t,
+  );
 
   return (
     <section id="vpn" className="scroll-mt-14">
@@ -34,7 +52,7 @@ export function SectionVPN() {
 
         {enabled && config.vpn_portal && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormField label={t('clientCidr')} htmlFor="vpn-cidr">
+            <FormField label={t('clientCidr')} htmlFor="vpn-cidr" error={clientCidrError}>
               <input
                 id="vpn-cidr"
                 type="text"
@@ -52,7 +70,7 @@ export function SectionVPN() {
               />
             </FormField>
 
-            <FormField label={t('listenAddress')} htmlFor="vpn-listen">
+            <FormField label={t('listenAddress')} htmlFor="vpn-listen" error={listenError}>
               <input
                 id="vpn-listen"
                 type="text"

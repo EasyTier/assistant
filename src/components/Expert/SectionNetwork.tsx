@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Shuffle, Eye, EyeOff } from 'lucide-react';
-import { useConfig } from '../../context/ConfigContext';
+import { useConfig } from '../../context/useConfig';
 import { FormField } from '../common/FormField';
 import { randomNetworkName, randomSecret } from '../../utils/random';
 

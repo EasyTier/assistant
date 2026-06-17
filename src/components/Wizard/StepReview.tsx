@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Copy, Check } from 'lucide-react';
-import { useConfig } from '../../context/ConfigContext';
+import { useConfig } from '../../context/useConfig';
 import { generateToml } from '../../utils/toml';
 
 export function StepReview() {

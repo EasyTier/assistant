@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useConfig } from '../../context/ConfigContext';
+import { useConfig } from '../../context/useConfig';
 import { FormField } from '../common/FormField';
 import { Select } from '../common/Select';
 import { getDefaultLogDir } from '../../types/config';
@@ -24,10 +24,7 @@ export function SectionLogging() {
   const { config, updateConfig } = useConfig();
 
   const handleOSChange = (os: TargetOS) => {
-    updateConfig({
-      target_os: os,
-      file_logger: { ...(config.file_logger ?? {}), dir: getDefaultLogDir(os) },
-    });
+    updateConfig({ target_os: os });
   };
 
   return (
@@ -61,7 +58,7 @@ export function SectionLogging() {
             options={levelOptions}
             onChange={(v) =>
               updateConfig({
-                console_logger: { level: v, ...(config.console_logger ?? {}) },
+                console_logger: { ...(config.console_logger ?? {}), level: v },
               })
             }
           />
@@ -74,7 +71,7 @@ export function SectionLogging() {
             options={levelOptions}
             onChange={(v) =>
               updateConfig({
-                file_logger: { level: v, ...(config.file_logger ?? {}) },
+                file_logger: { ...(config.file_logger ?? {}), level: v },
               })
             }
           />
@@ -90,7 +87,7 @@ export function SectionLogging() {
                 file_logger: { ...(config.file_logger ?? {}), dir: e.target.value },
               })
             }
-            placeholder="/tmp/easytier"
+            placeholder={getDefaultLogDir(config.target_os) ?? '/tmp/easytier'}
             className="w-full px-4 py-2.5 rounded-xl bg-white dark:bg-[#27272a] text-sm text-[var(--color-text-h)] dark:text-[var(--color-text-h-dark)] border border-[var(--color-border)] dark:border-[#3f3f46] focus:outline-none focus:ring-1 focus:ring-[var(--color-border)] dark:focus:ring-[var(--color-border-dark)]"
           />
         </FormField>

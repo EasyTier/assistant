@@ -1,7 +1,7 @@
 import { Wand2, SlidersHorizontal, Sun, Moon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
-import { useConfig } from '../context/ConfigContext';
+import { useConfig } from '../context/useConfig';
 import { getTheme, setTheme, type ThemeMode } from '../utils/theme';
 import { LanguageSwitcher } from './LanguageSwitcher';
 

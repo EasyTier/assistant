@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useConfig } from '../../context/ConfigContext';
+import { useConfig } from '../../context/useConfig';
 import { FormField } from '../common/FormField';
 import { Select } from '../common/Select';
 import { RepeatableField } from '../common/RepeatableField';
@@ -44,6 +44,14 @@ export function StepConnections() {
               }
               placeholder="tcp://host:11010"
               addLabel={t('addPeer')}
+            />
+          </FormField>
+          <FormField label={t('listeners')} description={t('localListenAddr')}>
+            <RepeatableField
+              values={config.listeners ?? []}
+              onChange={(v) => updateConfig({ listeners: v })}
+              placeholder="tcp://0.0.0.0:11010"
+              addLabel={t('addListener')}
             />
           </FormField>
         </>

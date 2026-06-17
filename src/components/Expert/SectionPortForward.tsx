@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useConfig } from '../../context/ConfigContext';
+import { useConfig } from '../../context/useConfig';
 import { FormField } from '../common/FormField';
 import { Plus, Trash2 } from 'lucide-react';
 import type { PortForwardConfig } from '../../types/config';

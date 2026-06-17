@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useConfig } from '../../context/ConfigContext';
-import { getDefaultLogDir } from '../../types/config';
+import { useConfig } from '../../context/useConfig';
 import type { TargetOS } from '../../types/config';
 
 export function StepPlatform() {
@@ -16,10 +15,6 @@ export function StepPlatform() {
   const handleSelect = (os: TargetOS) => {
     updateConfig({
       target_os: os,
-      file_logger: {
-        ...config.file_logger,
-        dir: getDefaultLogDir(os),
-      },
     });
   };
 

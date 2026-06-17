@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FileDown, Copy, Check, ChevronUp, ChevronDown } from 'lucide-react';
-import { useConfig } from '../context/ConfigContext';
+import { useConfig } from '../context/useConfig';
 import { generateToml, downloadToml } from '../utils/toml';
 
 export function TomlPreview() {

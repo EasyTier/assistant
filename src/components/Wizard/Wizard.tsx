@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useConfig } from '../../context/ConfigContext';
+import { useConfig } from '../../context/useConfig';
 import { WizardNav } from './WizardNav';
 import { WizardControls } from './WizardControls';
 import { StepNetwork } from './StepNetwork';

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ConfigProvider } from './context/ConfigContext';
+import { ConfigProvider } from './context/ConfigProvider';
 import { Header } from './components/Header';
 import { Wizard } from './components/Wizard/Wizard';
 import { ExpertPanel } from './components/Expert/ExpertPanel';
